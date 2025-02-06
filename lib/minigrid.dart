@@ -1,7 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:sudoku_api/sudoku_api.dart';
 
 class MiniGrid extends StatelessWidget {
-  const MiniGrid({super.key});
+  final Puzzle puzzle;
+  final int block;
+
+  const MiniGrid({super.key, required this.puzzle, required this.block});
+
+  String getValue(int y) {
+    int? value = puzzle.board()?.matrix()?[block][y].getValue();
+    if (value == null || value == 0) return "";
+    return value.toString();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +27,7 @@ class MiniGrid extends StatelessWidget {
             height: boxSize,
             decoration: BoxDecoration(
                 border: Border.all(color: Colors.black, width: 0.3)),
-            child: const Center(child: Text("T")));
+            child: Center(child: Text(getValue(x))));
       }),
     );
   }
