@@ -42,6 +42,15 @@ class _GameState extends State<Game> {
     });
   }
 
+  void _numberInput(int number) {
+    setState(() {
+      puzzle
+          .board()!
+          .cellAt(Position(index: currentSelection))
+          .setValue(number);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height / 2;
@@ -78,6 +87,25 @@ class _GameState extends State<Game> {
                           ));
                     }),
                   )),
+              const SizedBox(height: 20),
+              Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: List.generate(5, (index) {
+                    return Padding(
+                        padding: const EdgeInsets.all(4),
+                        child: ElevatedButton(
+                            onPressed: () => _numberInput(index + 1),
+                            child: Text("${index + 1}")));
+                  })),
+              Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: List.generate(4, (index) {
+                    return Padding(
+                        padding: const EdgeInsets.all(4),
+                        child: ElevatedButton(
+                            onPressed: () => _numberInput(index + 6),
+                            child: Text("${index + 6}")));
+                  }))
             ],
           ),
         ));
