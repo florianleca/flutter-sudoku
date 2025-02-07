@@ -22,6 +22,7 @@ class Game extends StatefulWidget {
 
 class _GameState extends State<Game> {
   late Puzzle puzzle;
+  int currentSelection = -1;
 
   @override
   void initState() {
@@ -33,6 +34,12 @@ class _GameState extends State<Game> {
     PuzzleOptions puzzleOptions = PuzzleOptions(patternName: "winter");
     puzzle = Puzzle(puzzleOptions);
     await puzzle.generate();
+  }
+
+  void updateSelection(int newSelection) {
+    setState(() {
+      currentSelection = newSelection;
+    });
   }
 
   @override
@@ -63,7 +70,12 @@ class _GameState extends State<Game> {
                           height: boxSize,
                           decoration: BoxDecoration(
                               border: Border.all(color: Colors.blueAccent)),
-                          child: MiniGrid(puzzle: puzzle, block: x));
+                          child: MiniGrid(
+                            puzzle: puzzle,
+                            block: x,
+                            selection: currentSelection,
+                            onSelect: updateSelection,
+                          ));
                     }),
                   )),
             ],

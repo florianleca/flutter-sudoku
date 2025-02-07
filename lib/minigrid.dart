@@ -2,15 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:sudoku_api/sudoku_api.dart';
 
 class MiniGrid extends StatelessWidget {
+  const MiniGrid(
+      {super.key,
+      required this.puzzle,
+      required this.block,
+      required this.selection,
+      required this.onSelect});
+
   final Puzzle puzzle;
   final int block;
+  final int selection;
+  final ValueChanged<int> onSelect;
 
-  const MiniGrid({super.key, required this.puzzle, required this.block});
-
-  String getValue(int y) {
+  String _getValue(int y) {
     int? value = puzzle.board()?.matrix()?[block][y].getValue();
     if (value == null || value == 0) return "";
     return value.toString();
+  }
+
+  int _getCellNumber(int x) {
+    return 9 * block + x;
   }
 
   @override
@@ -22,12 +33,23 @@ class MiniGrid extends StatelessWidget {
     return GridView.count(
       crossAxisCount: 3,
       children: List.generate(9, (x) {
-        return Container(
-            width: boxSize,
-            height: boxSize,
-            decoration: BoxDecoration(
-                border: Border.all(color: Colors.black, width: 0.3)),
-            child: Center(child: Text(getValue(x))));
+        return Material(
+            child: InkWell(
+                onTap: _getValue(x) == ""
+                    ? () => onSelect(_getCellNumber(x))
+                    : null,
+                child: Container(
+                  width: boxSize,
+                  height: boxSize,
+                  decoration: BoxDecoration(
+                      border: Border.all(color: Colors.black, width: 0.3),
+                      color: selection == _getCellNumber(x)
+                          ? Colors.blueAccent.shade100.withAlpha(100)
+                          : Colors.transparent),
+                  child: Center(
+                    child: Text(_getValue(x)),
+                  ),
+                )));
       }),
     );
   }
