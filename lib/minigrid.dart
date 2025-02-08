@@ -16,8 +16,14 @@ class MiniGrid extends StatelessWidget {
 
   String _getValue(int y) {
     int? value = puzzle.board()?.matrix()?[block][y].getValue();
-    if (value == null || value == 0) return "";
+    if (value == null || value == 0) {
+      value = puzzle.solvedBoard()?.matrix()?[block][y].getValue();
+    }
     return value.toString();
+  }
+
+  bool _isHiddenValue(int y) {
+    return puzzle.board()?.matrix()?[block][y].getValue() == 0;
   }
 
   int _getCellNumber(int x) {
@@ -35,7 +41,7 @@ class MiniGrid extends StatelessWidget {
       children: List.generate(9, (x) {
         return Material(
             child: InkWell(
-                onTap: _getValue(x) == ""
+                onTap: _isHiddenValue(x)
                     ? () => onSelect(_getCellNumber(x))
                     : null,
                 child: Container(
@@ -47,7 +53,12 @@ class MiniGrid extends StatelessWidget {
                           ? Colors.blueAccent.shade100.withAlpha(100)
                           : Colors.transparent),
                   child: Center(
-                    child: Text(_getValue(x)),
+                    child: Text(
+                      _getValue(x),
+                      style: _isHiddenValue(x)
+                          ? const TextStyle(color: Colors.black12)
+                          : null,
+                    ),
                   ),
                 )));
       }),
