@@ -1,3 +1,4 @@
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:sudoku_api/sudoku_api.dart';
 import 'package:sudoku_starter/minigrid.dart';
@@ -43,12 +44,32 @@ class _GameState extends State<Game> {
   }
 
   void _numberInput(int number) {
-    setState(() {
-      puzzle
-          .board()!
-          .cellAt(Position(index: currentSelection))
-          .setValue(number);
-    });
+    int block = currentSelection ~/ 9;
+    int y = currentSelection % 9;
+    int row = (block ~/ 3) * 3 + (y ~/ 3);
+    int col = (block % 3) * 3 + (y % 3);
+    if (puzzle.solvedBoard()?.matrix()?[row][col].getValue() == number) {
+      setState(() {
+        puzzle
+            .board()!
+            .cellAt(Position(row: row, column: col))
+            .setValue(number);
+      });
+    } else {
+      final snackBar = SnackBar(
+        elevation: 0,
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: Colors.transparent,
+        content: AwesomeSnackbarContent(
+          title: 'Oops!',
+          message: 'Wrong guess, try again!',
+          contentType: ContentType.warning,
+        ),
+      );
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(snackBar);
+    }
   }
 
   @override

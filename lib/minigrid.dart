@@ -15,15 +15,19 @@ class MiniGrid extends StatelessWidget {
   final ValueChanged<int> onSelect;
 
   String _getValue(int y) {
-    int? value = puzzle.board()?.matrix()?[block][y].getValue();
+    int row = (block ~/ 3) * 3 + (y ~/ 3);
+    int col = (block % 3) * 3 + (y % 3);
+    int? value = puzzle.board()?.matrix()?[row][col].getValue();
     if (value == null || value == 0) {
-      value = puzzle.solvedBoard()?.matrix()?[block][y].getValue();
+      value = puzzle.solvedBoard()?.matrix()?[row][col].getValue();
     }
     return value.toString();
   }
 
   bool _isHiddenValue(int y) {
-    return puzzle.board()?.matrix()?[block][y].getValue() == 0;
+    int row = (block ~/ 3) * 3 + (y ~/ 3);
+    int col = (block % 3) * 3 + (y % 3);
+    return puzzle.board()?.matrix()?[row][col].getValue() == 0;
   }
 
   int _getCellNumber(int x) {
