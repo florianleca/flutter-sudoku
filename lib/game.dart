@@ -1,5 +1,6 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:sudoku_api/sudoku_api.dart';
 import 'package:sudoku_starter/minigrid.dart';
 
@@ -35,6 +36,7 @@ class _GameState extends State<Game> {
     PuzzleOptions puzzleOptions = PuzzleOptions(patternName: "winter");
     puzzle = Puzzle(puzzleOptions);
     await puzzle.generate();
+    setState(() {});
   }
 
   void updateSelection(int newSelection) {
@@ -126,7 +128,11 @@ class _GameState extends State<Game> {
                         child: ElevatedButton(
                             onPressed: () => _numberInput(index + 6),
                             child: Text("${index + 6}")));
-                  }))
+                  })),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                  onPressed: () => context.go('/end'),
+                  child: const Text("Resolve"))
             ],
           ),
         ));
